@@ -46,3 +46,4 @@ def load_spine_product(spine_prd:SpineProduct, sparkSession:SparkSession) -> Dat
     path = spine_prd.get_spine_path()
     
     return sparkSession.read.parquet(path)
+
