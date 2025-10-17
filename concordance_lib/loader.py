@@ -1,4 +1,5 @@
 from .pathing import *
+from .spineprd import SpineProduct
 
 from pyspark.sql import SparkSession, DataFrame
 
@@ -40,3 +41,8 @@ def load_linkage_results(id_group_number: int, sparkSession: SparkSession) -> Da
         df = df.join(df_proj, on="PROJECT_ID", how="right")
 
     return df
+
+def load_spine_product(spine_prd:SpineProduct, sparkSession:SparkSession) -> DataFrame:
+    path = spine_prd.get_spine_path()
+    
+    return sparkSession.read.parquet(path)
