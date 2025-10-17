@@ -1,5 +1,7 @@
 from .pathing import get_spine_path
 
+import os
+
 class SpineProductVersion:
     def __init__(self, spine_version:int, spine_revision:int = -1):
         self.spine_version = spine_version
@@ -16,10 +18,15 @@ class SpineProduct:
         self.asset_name = asset_name
         
     def get_spine_product_name(self) -> str:
-        return f"{self.asset_name}_spine_v{self.spine_version.spine_version}_{self.spine_version.spine_revision}.parquet"
+        def_str = "f{asset_name}_spine_v{spine_version}_{spine_revision}"
+        
+        def_str = os.environ.get("CONCLIB_PRD_NAME", def_str)
+        spine_ver = def_str.format(asset_name=self.asset_name, spine_version=self.spine_version.spine_version, spine_revision=self.spine_version.spine_revision)
+        
+        return spine_ver
     
     def get_spine_path(self) -> str:
-        fname = self.get_spine_product_name()
+        fname = f"{self.get_spine_product_name()}.parquet"
         
         return f"{get_spine_path()}/{fname}"
     
