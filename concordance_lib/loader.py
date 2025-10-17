@@ -1,8 +1,22 @@
 from .pathing import *
 from .spineprd import SpineProduct
+from .linkprjs import LinkageProjects
 
 from pyspark.sql import SparkSession, DataFrame
 
+def load_ent_map(id_group_num:int, sparkSession: SparkSession) -> DataFrame:
+    path = get_maps_path(id_group_num)
+    
+    print("Reading from: " + path)
+    try:
+        df = sparkSession.read.parquet(path)
+        if "ARTIFACT_ID" in df.columns:
+            df = df.drop("ARTIFACT_ID")
+        return df
+    except Exception as e:
+        print(f"Error reading from: {path}")
+        return None
+    
 def _load_projects(id_group_number: int, sparkSession: SparkSession) -> DataFrame:
     proj_dir = get_linkage_path()
     path_proj = f"{proj_dir}/link_projects_{id_group_number}.parquet"
@@ -46,4 +60,3 @@ def load_spine_product(spine_prd:SpineProduct, sparkSession:SparkSession) -> Dat
     path = spine_prd.get_spine_path()
     
     return sparkSession.read.parquet(path)
-
