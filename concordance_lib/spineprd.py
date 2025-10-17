@@ -1,6 +1,6 @@
 from .pathing import get_spine_path
 
-class SpineVersion:
+class SpineProductVersion:
     def __init__(self, spine_version:int, spine_revision:int = -1):
         self.spine_version = spine_version
         
@@ -11,7 +11,7 @@ class SpineVersion:
         self.spine_revision = spine_revision
 
 class SpineProduct:
-    def __init__(self, asset_name, spine_version:SpineVersion):
+    def __init__(self, asset_name, spine_version:SpineProductVersion):
         self.spine_version = spine_version
         self.asset_name = asset_name
         
