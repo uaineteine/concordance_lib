@@ -2,13 +2,10 @@ from .pathing import *
 
 from pyspark.sql import SparkSession, DataFrame
 
-def load_linkage_results(id_group_number: int, sparkSession: SparkSession) -> DataFrame:
-    projdir = get_linkage_path()
-
-    path_proj = f"{projdir}/link_projects_{id_group_number}.parquet"
-    path_res = f"{projdir}/link_results_{id_group_number}.parquet"
-
-    # Read the smaller project file first
+def _load_projects(id_group_number: int, sparkSession: SparkSession) -> DataFrame:
+    proj_dir = get_linkage_path()
+    path_proj = f"{proj_dir}/link_projects_{id_group_number}.parquet"
+    
     print("Reading from: " + path_proj)
     try:
         df_proj = sparkSession.read.parquet(path_proj)
@@ -16,21 +13,30 @@ def load_linkage_results(id_group_number: int, sparkSession: SparkSession) -> Da
     except Exception as e:
         print(f"Error reading from: {path_proj}")
         df_proj = None
+    
+    return df_proj
 
-    # Now read the larger results file
+def _load_results(id_group_number: int, sparkSession: SparkSession) -> DataFrame:
+    res_dir = get_linkage_path()
+    path_res = f"{res_dir}/link_results_{id_group_number}.parquet"
+
     print("Reading from: " + path_res)
     try:
-        columns_to_drop = ["STATUS_ID", "LINK_FLAG"]
-        df = sparkSession.read.parquet(path_res)
-        for col in columns_to_drop:
-            if col in df.columns:
-                df = df.drop(col)
+        df_res = sparkSession.read.parquet(path_res)
+        df_res = df_res.select("PROJECT_ID", "SPINE_VERSION_ID")
     except Exception as e:
-        print("Error reading from: " + path_res)
-        df = None
+        print(f"Error reading from: {path_res}")
+        df_res = None
+
+    return df_res
+
+def load_linkage_results(id_group_number: int, sparkSession: SparkSession) -> DataFrame:
+    
+    df_proj = _load_projects(id_group_number, sparkSession)
+    df = _load_results(id_group_number, sparkSession)
 
     # Optionally join the two if both were read successfully
     if df is not None and df_proj is not None:
-        df = df.join(df_proj, on="PROJECT_ID", how="left")
+        df = df.join(df_proj, on="PROJECT_ID", how="right")
 
     return df
