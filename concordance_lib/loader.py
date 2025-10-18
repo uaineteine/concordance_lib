@@ -93,9 +93,11 @@ def create_spine_conc(idGroup:int, projectIDs: list[int], spine_prd:SpineProduct
     #append these in union
     combined_df = spine_df.unionByName(proj_df).dropDuplicates()
     
+    #calculate the repeated ID counts to verify 1:1 linkage
     multi_spineid = combined_df.groupBy("SYNTHETIC_AEUID").agg(countDistinct("SPINE_ID").alias("spine_id_linked_count"))
     n_violations = multi_spineid.filter("spine_id_linked_count>1").count()
     
+    #spit error if any violations found
     if n_violations > 0:
         raise ValueError(f"Found {n_violations} violations of spine ID linkage.")
     
