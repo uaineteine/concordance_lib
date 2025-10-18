@@ -20,7 +20,7 @@ class SpineProduct:
     def get_spine_product_name(self) -> str:
         def_str = "f{asset_name}_spine_v{spine_version}_{spine_revision}"
         
-        def_str = os.environ.get("CONCLIB_PRD_NAME", def_str)
+        def_str = os.environ.get("CONCLIB_PRD_FMT", def_str)
         spine_ver = def_str.format(asset_name=self.asset_name, spine_version=self.spine_version.spine_version, spine_revision=self.spine_version.spine_revision)
         
         return spine_ver
