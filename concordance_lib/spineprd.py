@@ -30,3 +30,13 @@ class SpineProduct:
         
         return f"{get_spine_path()}/{fname}"
     
+    def _revision_bump(self) -> int:
+        """Increments the spine revision by 1 and returns the new revision number."""
+        if self.spine_version.spine_revision == -1:
+            raise ValueError("Cannot bump revision when spine_revision is set to -1 (latest).")
+        
+        #else
+        self.spine_version.spine_revision += 1
+        
+        return self.spine_version.spine_revision
+        
