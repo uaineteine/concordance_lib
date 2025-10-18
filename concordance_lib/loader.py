@@ -45,9 +45,23 @@ def _load_results(id_group_number: int, sparkSession: SparkSession) -> DataFrame
 
     return df_res
 
-def load_linkage_results(id_group_number: int, sparkSession: SparkSession) -> DataFrame:
-    
+def load_linkage_results(id_group_number: int, sparkSession: SparkSession, targetProjectIDs: list[int]=[]) -> DataFrame:
+    """_summary_
+
+    Args:
+        id_group_number (int): _description_
+        sparkSession (SparkSession): _description_
+        targetProjectIDs (list[int], optional): _description_. Defaults to [].
+
+    Returns:
+        DataFrame: _description_
+    """
     df_proj = _load_projects(id_group_number, sparkSession)
+    
+    #apply optional filtering on project IDs
+    if (len(targetProjectIDs) > 0) and (df_proj is not None):
+        df_proj = df_proj.filter(df_proj["PROJECT_ID"].isin(targetProjectIDs))
+    
     df = _load_results(id_group_number, sparkSession)
 
     # Optionally join the two if both were read successfully
@@ -62,10 +76,7 @@ def load_spine_product(spine_prd:SpineProduct, sparkSession:SparkSession) -> Dat
     return sparkSession.read.parquet(path)
 
 def create_spine_conc(idGroup:int, projectIDs: list[int], spine_prd:SpineProduct, sparkSession:SparkSession) -> DataFrame:
-    proj_df = load_linkage_results(idGroup, sparkSession)
-    
-    #filter for targetted project IDs
-    proj_df = proj_df.filter(proj_df["PROJECT_ID"].isin(projectIDs))
+    proj_df = load_linkage_results(idGroup, sparkSession, targetProjectIDs=projectIDs)
     
     #filter for spine version ID
     proj_df = proj_df.filter(proj_df["SPINE_VERSION_ID"] == spine_prd.spine_version.spine_version)
@@ -89,4 +100,5 @@ def create_spine_conc(idGroup:int, projectIDs: list[int], spine_prd:SpineProduct
         raise ValueError(f"Found {n_violations} violations of spine ID linkage.")
     
     return combined_df
+    
     
