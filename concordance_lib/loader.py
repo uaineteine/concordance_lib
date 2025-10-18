@@ -100,6 +100,8 @@ def create_spine_conc(idGroup:int, projectIDs: list[int], spine_prd:SpineProduct
     if n_violations > 0:
         raise ValueError(f"Found {n_violations} violations of spine ID linkage.")
     
+    print(f"Created combined spine concordance with {combined_df.count()} unique synthetic AEUIDs.")
+    
     return combined_df
     
     
