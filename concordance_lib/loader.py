@@ -82,13 +82,12 @@ def create_spine_conc(idGroup:int, projectIDs: list[int], spine_prd:SpineProduct
     proj_df = proj_df.filter(proj_df["SPINE_VERSION_ID"] == spine_prd.spine_version.spine_version)
     
     #rename the linkage projects columns
-    proj_df = proj_df.withColumnRenamed("FROM_SYN_AEUID", "SYNHETIC_AEUID")\
+    proj_df = proj_df.withColumnRenamed("FROM_SYN_AEUID", "SYNTHETIC_AEUID")\
                      .withColumnRenamed("TO_SPINE_ID", "SPINE_ID")
     proj_df = proj_df.select("SYNTHETIC_AEUID", "SPINE_ID")
     
     #load an existing spine product
-    spine_df = load_spine_product(spine_prd, sparkSession)
-    spine_df = spine_df.select("SYNTHETIC_AEUID", "SPINE_ID")
+    spine_df = load_spine_product(spine_prd, sparkSession).select("SYNTHETIC_AEUID", "SPINE_ID")
     
     #append these in union
     combined_df = spine_df.unionByName(proj_df).dropDuplicates()
