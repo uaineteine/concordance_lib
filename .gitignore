@@ -1,1 +1,7 @@
 concordance_lib/__pycache__/*
+conclib/build/*
+conclib/dist/*
+rkeylib/build/*
+rkeylib/dist/*
+conclib/concordance_lib.egg-info/*
+rkeylib/rkeylib.egg-info/*
