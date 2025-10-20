@@ -1,6 +1,6 @@
 print("Running test module")
 
-from concordance_lib import create_spine_conc, SpineProduct, SpineProductVersion, LinkageProjects
+from conclib import create_spine_conc, SpineProduct, SpineProductVersion, LinkageProjects
 from pyspark.sql import SparkSession
 
 spark = SparkSession.builder.appName("testSession").getOrCreate()
