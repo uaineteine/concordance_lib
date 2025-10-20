@@ -1,3 +1,5 @@
+from rkeys import create_rkeys, attach_spine_hash_by_version, get_rkey_path
+
 package_version = "2.0.0"
 
 def version_check(compareversion:str) -> bool:
