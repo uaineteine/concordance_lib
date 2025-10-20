@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='concordance_lib',
+    name='conclib',
     version='2.0.0',
     description='A library containing the conclib packages.',
     author='',
