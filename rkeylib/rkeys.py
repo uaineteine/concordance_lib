@@ -1,4 +1,4 @@
-from pathing import get_path
+from conclib import get_path
 
 def get_rkey_path() -> str:
     """Return specifically the rkey path in the system"""
