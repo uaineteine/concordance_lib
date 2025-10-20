@@ -5,3 +5,4 @@ rkeylib/build/*
 rkeylib/dist/*
 conclib/concordance_lib.egg-info/*
 rkeylib/rkeylib.egg-info/*
+conclib/conclib.egg-info/*
